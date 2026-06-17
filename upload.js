@@ -19,16 +19,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   const user = await Auth.requireAuth();
   if (!user) return;
 
-  // 파일 선택 + 미리보기
-  $("fileInput").addEventListener("change", (e) => {
-    const f = e.target.files[0];
+  // 드래그앤드롭 + 미리보기
+  const dropzone = $("dropzone");
+  const fileInput = $("fileInput");
+  const prompt = $("dropzonePrompt");
+  const previewWrap = $("previewWrap");
+
+  function handleFile(f) {
     if (!f) return;
-    if (!f.type.startsWith("image/")) return err("이미지 파일만 업로드할 수 있습니다.");
-    if (f.size > 5 * 1024 * 1024) return err("파일 크기는 5MB 이하여야 합니다.");
+    const okTypes = ["image/png", "image/jpeg", "image/webp"];
+    if (!okTypes.includes(f.type)) return err("PNG, JPG, WEBP 이미지만 올릴 수 있습니다.");
+    if (f.size > 10 * 1024 * 1024) return err("파일 크기는 10MB 이하여야 합니다.");
     file = f;
     $("previewImg").src = URL.createObjectURL(f);
-    $("previewWrap").hidden = false;
+    prompt.hidden = true;
+    previewWrap.hidden = false;
     $("uploadError").hidden = true;
+  }
+
+  fileInput.addEventListener("change", (e) => handleFile(e.target.files[0]));
+  // 미리보기가 없을 때만 클릭으로 파일 선택
+  dropzone.addEventListener("click", () => { if (previewWrap.hidden) fileInput.click(); });
+  dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("dragover"); });
+  dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropzone.classList.remove("dragover");
+    handleFile(e.dataTransfer.files[0]);
+  });
+  // 이미지 제거
+  $("previewRemove").addEventListener("click", (e) => {
+    e.stopPropagation();
+    file = null;
+    fileInput.value = "";
+    $("previewImg").src = "";
+    previewWrap.hidden = true;
+    prompt.hidden = false;
   });
 
   form.addEventListener("submit", async (e) => {
