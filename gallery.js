@@ -152,11 +152,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let rows;
     if (term) {
-      // 검색어 + 한↔영 동의어로 확장
-      const words = term.split(/\s+/).filter(Boolean);
-      const variants = new Set();
-      words.forEach((w) => { variants.add(w); APP.synonymsOf(w).forEach((s) => variants.add(s)); });
-      const list = [...variants];
+      // 검색어 확장: 로컬 사전 + Claude Haiku(번역·연관어)
+      const list = await APP.expandQuery(term);
 
       // 1) Full-Text Search (확장된 단어들 OR)
       const tsq = list.map((w) => w.replace(/[^\p{L}\p{N}]/gu, "")).filter(Boolean).join(" | ");

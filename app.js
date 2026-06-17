@@ -38,7 +38,7 @@ const APP = {
   // 카테고리 배열 → 표시 문자열
   catText(cat) { return Array.isArray(cat) ? cat.join(", ") : (cat || ""); },
 
-  // 검색 동의어(한↔영) — 입력 단어와 같은 그룹의 모든 단어 반환
+  // 검색 동의어(한↔영) — 입력 단어와 같은 그룹의 모든 단어 반환 (로컬 사전, 즉시)
   synonymsOf(word) {
     const w = String(word).toLowerCase();
     const out = new Set();
@@ -46,6 +46,34 @@ const APP = {
       if (group.some((g) => g.toLowerCase() === w)) group.forEach((g) => out.add(g));
     });
     return [...out];
+  },
+
+  // 검색어 확장: 로컬 사전(즉시) + Claude Haiku(Edge Function, 모든 단어 한↔영·연관어)
+  _queryCache: new Map(),
+  async expandQuery(term) {
+    const key = term.toLowerCase();
+    if (APP._queryCache.has(key)) return APP._queryCache.get(key);
+
+    // 1) 로컬 사전 (오프라인/함수 미배포 시에도 동작)
+    const set = new Set();
+    term.split(/\s+/).filter(Boolean).forEach((w) => {
+      set.add(w);
+      APP.synonymsOf(w).forEach((s) => set.add(s));
+    });
+
+    // 2) Claude Haiku 번역/연관어 (Edge Function). 실패하면 로컬 결과로 폴백.
+    if (window.sb) {
+      try {
+        const { data, error } = await sb.functions.invoke("search-expand", { body: { q: term } });
+        if (!error && data && Array.isArray(data.terms)) {
+          data.terms.forEach((t) => { if (t) set.add(String(t).trim()); });
+        }
+      } catch (_) { /* 폴백 */ }
+    }
+
+    const list = [...set].filter(Boolean);
+    APP._queryCache.set(key, list);
+    return list;
   },
 
   /* ---------- 레벨 ---------- */
