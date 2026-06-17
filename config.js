@@ -49,6 +49,26 @@ window.APP_CONFIG = {
     return this.AI_TOOL_GROUPS.flatMap((g) => g.tools);
   },
 
+  // 검색 동의어(한↔영) — 한 그룹 안의 단어들은 서로 같은 뜻으로 매칭됩니다.
+  // 예: "honey"로 검색하면 제목 "꿀"도 나옴. 필요한 단어는 자유롭게 추가하세요.
+  SEARCH_SYNONYMS: [
+    ["꿀", "honey"], ["고양이", "냥이", "cat", "kitty"], ["강아지", "개", "dog", "puppy"],
+    ["동물", "animal"], ["새", "bird"], ["물고기", "fish"], ["나비", "butterfly"],
+    ["꽃", "flower"], ["장미", "rose"], ["나무", "tree"], ["숲", "forest"], ["식물", "plant"],
+    ["바다", "sea", "ocean"], ["산", "mountain"], ["강", "river"], ["호수", "lake"],
+    ["하늘", "sky"], ["별", "star"], ["달", "moon"], ["태양", "해", "sun"], ["우주", "space", "galaxy", "universe"],
+    ["눈", "snow"], ["비", "rain"], ["구름", "cloud"], ["불", "fire", "flame"], ["물", "water"],
+    ["도시", "city"], ["건물", "building"], ["밤", "night"], ["풍경", "landscape", "scenery"],
+    ["자연", "nature"], ["겨울", "winter"], ["여름", "summer"], ["봄", "spring"], ["가을", "autumn", "fall"],
+    ["사람", "person", "people"], ["여자", "woman", "girl"], ["남자", "man", "boy"], ["아기", "baby"],
+    ["가족", "family"], ["연인", "커플", "couple"], ["사랑", "love"], ["천사", "angel"], ["악마", "demon", "devil"],
+    ["로봇", "robot"], ["용", "dragon"], ["괴물", "monster"], ["마법", "magic"], ["전사", "warrior"],
+    ["공주", "princess"], ["왕", "king"], ["기사", "knight"], ["히어로", "hero"], ["판타지", "fantasy"],
+    ["음식", "food"], ["커피", "coffee"], ["자동차", "차", "car"], ["비행기", "airplane", "plane"],
+    ["기차", "train"], ["배", "ship", "boat"], ["성", "castle"], ["게임", "game"], ["음악", "music"],
+    ["초상화", "portrait"], ["추상", "abstract"], ["감정", "emotion"], ["꿈", "dream"],
+  ],
+
   // Google AdSense — 승인된 값으로 교체하세요. 비우면 자리표시 박스 표시.
   ADSENSE: {
     CLIENT: "", // 예: "ca-pub-1234567890123456"

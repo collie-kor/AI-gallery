@@ -38,6 +38,16 @@ const APP = {
   // 카테고리 배열 → 표시 문자열
   catText(cat) { return Array.isArray(cat) ? cat.join(", ") : (cat || ""); },
 
+  // 검색 동의어(한↔영) — 입력 단어와 같은 그룹의 모든 단어 반환
+  synonymsOf(word) {
+    const w = String(word).toLowerCase();
+    const out = new Set();
+    (window.APP_CONFIG.SEARCH_SYNONYMS || []).forEach((group) => {
+      if (group.some((g) => g.toLowerCase() === w)) group.forEach((g) => out.add(g));
+    });
+    return [...out];
+  },
+
   /* ---------- 레벨 ---------- */
   LEVELS: [
     { name: "Beginner", min: 0 },

@@ -152,12 +152,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let rows;
     if (term) {
-      // 단어별 OR 검색용 tsquery (특수문자 제거)
-      const tsq = term.split(/\s+/).map((w) => w.replace(/[^\p{L}\p{N}]/gu, "")).filter(Boolean).join(" | ");
-      // 1) Full-Text Search  2) ilike 부분일치 — 합쳐서 중복 제거 (FTS 우선)
+      // 검색어 + 한↔영 동의어로 확장
+      const words = term.split(/\s+/).filter(Boolean);
+      const variants = new Set();
+      words.forEach((w) => { variants.add(w); APP.synonymsOf(w).forEach((s) => variants.add(s)); });
+      const list = [...variants];
+
+      // 1) Full-Text Search (확장된 단어들 OR)
+      const tsq = list.map((w) => w.replace(/[^\p{L}\p{N}]/gu, "")).filter(Boolean).join(" | ");
+      // 2) ilike 부분일치 (확장된 단어들 OR)
+      const orParts = list
+        .map((w) => w.replace(/[,()%*]/g, "").trim())
+        .filter(Boolean)
+        .map((w) => `title.ilike.%${w}%`)
+        .join(",");
+
       const [fts, ilk] = await Promise.all([
         tsq ? baseQuery().textSearch("search_vector", tsq, { config: "simple" }) : Promise.resolve({ data: [] }),
-        baseQuery().ilike("title", `%${term}%`),
+        orParts ? baseQuery().or(orParts) : Promise.resolve({ data: [] }),
       ]);
       if (fts.error && ilk.error) { status.textContent = "불러오기 실패: " + (fts.error || ilk.error).message; return; }
       const seen = new Set();
