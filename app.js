@@ -172,7 +172,13 @@ const APP = {
     if (user) {
       guest.hidden = true;
       userBox.hidden = false;
-      const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0];
+      // 표시 이름은 public.users.name 을 기준으로 (Google 재로그인 시 메타데이터가 덮어써지는 문제 방지)
+      let name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0];
+      if (window.sb) {
+        const { data } = await sb.from("users").select("name").eq("id", user.id).maybeSingle();
+        if (data && data.name) name = data.name;
+      }
+      APP.currentName = name;
       const chip = document.getElementById("navUserName");
       if (chip) chip.textContent = "👤 " + name;
     } else {

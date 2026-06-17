@@ -24,6 +24,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   let myName = user.user_metadata?.full_name || user.email?.split("@")[0] || "나";
   let myLevel = "Beginner";
 
+  // 표시 이름은 public.users.name 기준 (Google 재로그인 시 덮어쓰기 방지)
+  const { data: profRow } = await sb.from("users").select("name").eq("id", user.id).maybeSingle();
+  if (profRow && profRow.name) myName = profRow.name;
+
   // 프로필 정보
   $("profileEmail").textContent = user.email || "";
   $("profileName").textContent = myName;
