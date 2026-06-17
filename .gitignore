@@ -1,0 +1,7 @@
+# 로컬 기록용 (앱은 config.js를 사용하므로 .env는 배포에 불필요)
+.env
+
+# OS / 에디터
+.DS_Store
+Thumbs.db
+node_modules/

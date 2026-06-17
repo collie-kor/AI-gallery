@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIGallery — 업로드</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===== 헤더 ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="gallery.html" class="logo"><span class="logo-mark">✦</span> AI<span class="logo-accent">Gallery</span></a>
+      <nav class="main-nav">
+        <a href="gallery.html" data-nav>갤러리</a>
+        <a href="upload.html" data-nav>업로드</a>
+        <a href="profile.html" data-nav>내 프로필</a>
+      </nav>
+      <div class="header-actions">
+        <div id="navGuest" class="auth-guest" hidden>
+          <a href="index.html" class="btn btn-primary">로그인</a>
+        </div>
+        <div id="navUser" class="auth-user" hidden>
+          <span class="user-chip" id="navUserName"></span>
+          <button class="btn btn-ghost" id="logoutBtn">로그아웃</button>
+        </div>
+      </div>
+    </div>
+    <div class="container"><div class="ad-slot ad-header" data-ad="header"></div></div>
+  </header>
+
+  <!-- ===== 업로드 폼 ===== -->
+  <main class="container narrow">
+    <h1 class="page-title">사진 공유하기</h1>
+    <p class="page-sub">당신의 AI 작품을 갤러리에 추가하세요.</p>
+
+    <form id="uploadForm" class="card-form">
+      <label class="field">사진 <span class="req">*</span>
+        <input type="file" id="fileInput" accept="image/*" required />
+      </label>
+      <div class="preview-wrap" id="previewWrap" hidden>
+        <img id="previewImg" src="" alt="미리보기" />
+      </div>
+
+      <label class="field">제목 <span class="req">*</span>
+        <input type="text" id="titleInput" required maxlength="60" placeholder="예: 황혼의 산맥" />
+      </label>
+
+      <label class="field">사용한 AI 툴 <span class="req">*</span>
+        <!-- 옵션은 upload.js에서 config.js의 AI_TOOL_GROUPS(그룹)로 채웁니다 -->
+        <select id="aiInput" required></select>
+      </label>
+
+      <div class="field">카테고리 <span class="req">*</span> <span class="optional">(다중 선택, 최소 1개)</span>
+        <!-- 카테고리 36개 체크박스 (4열 그리드) -->
+        <div class="check-grid" id="categoryChecks" style="grid-template-columns: repeat(4, 1fr);">
+          <label class="check-item"><input type="checkbox" name="category" value="사람"><span>사람</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="연인/커플"><span>연인/커플</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="가족"><span>가족</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="동물"><span>동물</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="자연"><span>자연</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="풍경"><span>풍경</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="도시"><span>도시</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="건물/건축물"><span>건물/건축물</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="탈것"><span>탈것</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="판타지"><span>판타지</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="SF/사이버펑크"><span>SF/사이버펑크</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="캐릭터"><span>캐릭터</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="히어로"><span>히어로</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="신화/전설"><span>신화/전설</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="괴물/크리처"><span>괴물/크리처</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="우주"><span>우주</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="바다"><span>바다</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="꽃/식물"><span>꽃/식물</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="정물"><span>정물</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="감정/추상"><span>감정/추상</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="동화"><span>동화</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="중세"><span>중세</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="해적"><span>해적</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="닌자/무협"><span>닌자/무협</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="스포츠"><span>스포츠</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="음악"><span>음악</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="음식"><span>음식</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="반려동물"><span>반려동물</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="계절"><span>계절</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="기념일"><span>기념일</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="게임"><span>게임</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="영화 패러디"><span>영화 패러디</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="책/소설 장면"><span>책/소설 장면</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="세계여행"><span>세계여행</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="캠핑"><span>캠핑</span></label>
+          <label class="check-item"><input type="checkbox" name="category" value="꿈속 세계"><span>꿈속 세계</span></label>
+        </div>
+      </div>
+
+      <label class="field">설명 <span class="optional">(선택)</span>
+        <textarea id="descInput" rows="4" maxlength="300" placeholder="작품에 대한 간단한 설명"></textarea>
+      </label>
+
+      <p class="form-error" id="uploadError" hidden></p>
+      <button type="submit" class="btn btn-primary btn-block" id="submitBtn">공유하기</button>
+    </form>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="ad-slot ad-footer" data-ad="footer"></div>
+      <p class="footer-text">© 2026 AIGallery — Powered by Supabase</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+  <script src="upload.js"></script>
+</body>
+</html>

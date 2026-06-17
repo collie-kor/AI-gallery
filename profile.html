@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIGallery — 내 프로필</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===== 헤더 ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="gallery.html" class="logo"><span class="logo-mark">✦</span> AI<span class="logo-accent">Gallery</span></a>
+      <nav class="main-nav">
+        <a href="gallery.html" data-nav>갤러리</a>
+        <a href="upload.html" data-nav>업로드</a>
+        <a href="profile.html" data-nav>내 프로필</a>
+      </nav>
+      <div class="header-actions">
+        <div id="navGuest" class="auth-guest" hidden>
+          <a href="index.html" class="btn btn-primary">로그인</a>
+        </div>
+        <div id="navUser" class="auth-user" hidden>
+          <span class="user-chip" id="navUserName"></span>
+          <button class="btn btn-ghost" id="logoutBtn">로그아웃</button>
+        </div>
+      </div>
+    </div>
+    <div class="container"><div class="ad-slot ad-header" data-ad="header"></div></div>
+  </header>
+
+  <!-- ===== 프로필 ===== -->
+  <main class="container">
+    <section class="profile-head">
+      <div class="profile-avatar">👤</div>
+      <div>
+        <h1 class="profile-name"><span class="level-badge" id="profileLevelBadge">Beginner</span> <span id="profileName">사용자</span></h1>
+        <p class="profile-email" id="profileEmail"></p>
+        <p class="profile-meta">내 업로드 <strong id="myCount">0</strong>개 · <span class="count-link" id="followerBtn">팔로워 <strong id="followerCount">0</strong></span> · <span class="count-link" id="followingBtn">팔로잉 <strong id="followingCount">0</strong></span></p>
+        <button class="btn btn-ghost btn-sm" id="editNameBtn">✏️ 이름 변경</button>
+      </div>
+      <a href="upload.html" class="btn btn-primary">+ 새 사진 공유</a>
+    </section>
+
+    <!-- ===== 레벨 / 통계 카드 ===== -->
+    <section class="level-card">
+      <div class="level-card-head">
+        <span class="level-badge" id="myLevelBadge">Beginner</span>
+        <span class="level-score">총 <strong id="myScore">0</strong>점</span>
+      </div>
+      <div class="level-progress"><div class="level-progress-bar" id="levelBar"></div></div>
+      <p class="level-next" id="levelNext"></p>
+      <div class="level-totals">
+        <div><strong id="totLikes">0</strong><span>❤️ 좋아요</span></div>
+        <div><strong id="totViews">0</strong><span>👁 조회</span></div>
+        <div><strong id="totDownloads">0</strong><span>⬇ 다운로드</span></div>
+      </div>
+    </section>
+
+    <div class="profile-tabs">
+      <button class="profile-tab active" data-tab="mine">내가 올린 사진</button>
+      <button class="profile-tab" data-tab="feed">팔로잉 피드</button>
+    </div>
+
+    <div id="tabMine">
+      <section class="gallery" id="myGrid"></section>
+      <p class="status-msg" id="myStatus" hidden></p>
+      <div class="empty-msg" id="myEmpty" hidden>
+        <p class="empty-title">아직 올린 사진이 없어요</p>
+        <p class="empty-sub">첫 작품을 업로드해 보세요!</p>
+      </div>
+    </div>
+
+    <div id="tabFeed" hidden>
+      <section class="gallery" id="feedGrid"></section>
+      <p class="status-msg" id="feedStatus" hidden></p>
+      <div class="empty-msg" id="feedEmpty" hidden>
+        <p class="empty-title">팔로잉 피드가 비어 있어요</p>
+        <p class="empty-sub">관심 있는 유저를 팔로우해 보세요!</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== 상세 모달 ===== -->
+  <div class="modal-overlay" id="detailModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" data-close-modal aria-label="닫기">&times;</button>
+      <div class="modal-img-wrap"><img id="modalImg" src="" alt="" /></div>
+      <div class="modal-info">
+        <span class="modal-category" id="modalCategory"></span>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p class="modal-artist" id="modalArtist"></p>
+        <button class="btn btn-ghost btn-sm follow-btn" id="followBtn" hidden>+ 팔로우</button>
+        <p class="modal-desc" id="modalDesc"></p>
+        <p class="modal-ai">🤖 사용 AI: <span id="modalAi"></span></p>
+        <p class="modal-date" id="modalDate"></p>
+        <div class="modal-stats">
+          <button class="like-btn" id="likeBtn" data-liked="0"><span id="likeIcon">🤍</span> <span id="likeCount">0</span></button>
+          <span class="stat-item">👁 <span id="viewCount">0</span></span>
+          <span class="stat-item">⬇ <span id="downloadCount">0</span></span>
+        </div>
+        <button class="btn btn-primary modal-download" id="downloadBtn">⬇ 이미지 다운로드</button>
+        <button class="report-link" id="reportBtn" hidden>🚩 신고하기</button>
+        <div class="ad-slot ad-detail" data-ad="detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 이름 변경 모달 ===== -->
+  <div class="modal-overlay" id="nameModal" hidden>
+    <div class="form-box" role="dialog" aria-modal="true" aria-labelledby="nameHead">
+      <button class="modal-close" data-close-modal aria-label="닫기">&times;</button>
+      <h2 class="form-box-title" id="nameHead">이름 변경</h2>
+      <p class="form-box-sub">갤러리에 표시되는 이름이 함께 바뀝니다.</p>
+      <form id="nameForm" class="auth-form">
+        <label class="field">새 이름 <span class="req">*</span>
+          <input type="text" id="newName" required maxlength="30" placeholder="표시할 이름" />
+        </label>
+        <p class="form-error" id="nameError" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block" id="nameSubmit">저장</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== 편집 모달 ===== -->
+  <div class="modal-overlay" id="editModal" hidden>
+    <div class="form-box" role="dialog" aria-modal="true" aria-labelledby="editTitleHead">
+      <button class="modal-close" data-close-modal aria-label="닫기">&times;</button>
+      <h2 class="form-box-title" id="editTitleHead">사진 정보 편집</h2>
+      <p class="form-box-sub">이미지 자체는 변경할 수 없습니다.</p>
+      <form id="editForm" class="auth-form">
+        <label class="field">제목 <span class="req">*</span>
+          <input type="text" id="editTitle" required maxlength="60" />
+        </label>
+        <label class="field">사용한 AI 툴 <span class="req">*</span>
+          <select id="editAi" required></select>
+        </label>
+        <div class="field">카테고리 <span class="req">*</span> <span class="optional">(다중 선택 가능)</span>
+          <div class="check-grid" id="editCategoryChecks"></div>
+        </div>
+        <label class="field">설명 <span class="optional">(선택)</span>
+          <textarea id="editDesc" rows="3" maxlength="300"></textarea>
+        </label>
+        <p class="form-error" id="editError" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block" id="editSubmit">저장</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="ad-slot ad-footer" data-ad="footer"></div>
+      <p class="footer-text">© 2026 AIGallery — Powered by Supabase</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

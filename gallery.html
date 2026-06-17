@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIGallery — 갤러리</title>
+
+  <!-- ===== Google AdSense 로더 (승인 후 주석 해제 + ID 교체) ===== -->
+  <!--
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===== 헤더 ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="gallery.html" class="logo"><span class="logo-mark">✦</span> AI<span class="logo-accent">Gallery</span></a>
+      <nav class="main-nav">
+        <a href="gallery.html" data-nav>갤러리</a>
+        <a href="upload.html" data-nav>업로드</a>
+        <a href="profile.html" data-nav>내 프로필</a>
+      </nav>
+      <div class="header-actions">
+        <div id="navGuest" class="auth-guest" hidden>
+          <a href="index.html" class="btn btn-primary">로그인</a>
+        </div>
+        <div id="navUser" class="auth-user" hidden>
+          <span class="user-chip" id="navUserName"></span>
+          <button class="btn btn-ghost" id="logoutBtn">로그아웃</button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== AdSense: 헤더 배너 ===== -->
+    <div class="container"><div class="ad-slot ad-header" data-ad="header"></div></div>
+  </header>
+
+  <!-- ===== 히어로 ===== -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">함께 만드는<br /><span>AI 아트 커뮤니티</span></h1>
+      <p class="hero-subtitle">전 세계 크리에이터의 AI 이미지를 둘러보세요.</p>
+    </div>
+  </section>
+
+  <!-- ===== 본문 (사이드바 필터 + 갤러리) ===== -->
+  <div class="container gallery-layout">
+    <!-- 모바일 필터 열기 버튼 -->
+    <button class="filter-toggle" id="filterToggle">☰ 필터</button>
+
+    <!-- 좌측: 필터 패널 -->
+    <aside class="filter-panel" id="filterPanel" aria-label="필터">
+      <div class="filter-head">
+        <h2 class="filter-title">필터 <span class="filter-count" id="filterCount" hidden>0</span></h2>
+        <button class="filter-reset" id="filterReset">리셋</button>
+        <button class="filter-close" id="filterClose" aria-label="필터 닫기">&times;</button>
+      </div>
+
+      <!-- 섹션 0: 정렬 (하나만 선택) -->
+      <section class="filter-section" data-open="1">
+        <button class="filter-section-head" data-section-toggle>
+          <span>정렬</span><span class="chevron">▾</span>
+        </button>
+        <div class="filter-section-body">
+          <div class="check-list">
+            <label class="check-item"><input type="checkbox" id="sortRecent" checked><span>시간순 (최신)</span></label>
+            <label class="check-item"><input type="checkbox" id="sortPopular"><span>인기순 (조회·좋아요·다운로드)</span></label>
+          </div>
+        </div>
+      </section>
+
+      <!-- 섹션 1: AI 툴 -->
+      <section class="filter-section" data-open="1">
+        <button class="filter-section-head" data-section-toggle>
+          <span>AI 툴</span><span class="chevron">▾</span>
+        </button>
+        <div class="filter-section-body">
+          <div class="check-list" id="aiFilterList"></div>
+          <button class="show-more" id="aiShowMore" hidden>더 보기</button>
+        </div>
+      </section>
+
+      <!-- 섹션 2: 카테고리 -->
+      <section class="filter-section" data-open="1">
+        <button class="filter-section-head" data-section-toggle>
+          <span>카테고리</span><span class="chevron">▾</span>
+        </button>
+        <div class="filter-section-body">
+          <div class="check-list" id="catFilterList"></div>
+          <button class="show-more" id="catShowMore" hidden>더 보기</button>
+        </div>
+      </section>
+
+      <!-- ===== AdSense: 사이드바 ===== -->
+      <div class="ad-slot ad-sidebar" data-ad="sidebar"></div>
+    </aside>
+    <div class="filter-backdrop" id="filterBackdrop" hidden></div>
+
+    <!-- 우측: 검색바 + 갤러리 -->
+    <main class="gallery-main">
+      <div class="search-bar">
+        <input type="search" id="searchInput" class="search-input" placeholder="🔍 제목으로 검색 (부분 일치)" />
+      </div>
+      <p class="gallery-count" id="galleryCount">총 0개의 이미지</p>
+
+      <section class="gallery" id="gallery" aria-live="polite"></section>
+      <p class="status-msg" id="statusMsg" hidden></p>
+      <div class="empty-msg" id="emptyMsg" hidden>
+        <p class="empty-title">조건에 맞는 사진이 없어요</p>
+        <p class="empty-sub">필터를 바꾸거나 첫 작품을 공유해 보세요!</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== 상세 모달 ===== -->
+  <div class="modal-overlay" id="detailModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" data-close-modal aria-label="닫기">&times;</button>
+      <div class="modal-img-wrap"><img id="modalImg" src="" alt="" /></div>
+      <div class="modal-info">
+        <span class="modal-category" id="modalCategory"></span>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p class="modal-artist" id="modalArtist"></p>
+        <button class="btn btn-ghost btn-sm follow-btn" id="followBtn" hidden>+ 팔로우</button>
+        <p class="modal-desc" id="modalDesc"></p>
+        <p class="modal-ai">🤖 사용 AI: <span id="modalAi"></span></p>
+        <p class="modal-date" id="modalDate"></p>
+        <div class="modal-stats">
+          <button class="like-btn" id="likeBtn" data-liked="0"><span id="likeIcon">🤍</span> <span id="likeCount">0</span></button>
+          <span class="stat-item">👁 <span id="viewCount">0</span></span>
+          <span class="stat-item">⬇ <span id="downloadCount">0</span></span>
+        </div>
+        <button class="btn btn-primary modal-download" id="downloadBtn">⬇ 이미지 다운로드</button>
+        <button class="report-link" id="reportBtn" hidden>🚩 신고하기</button>
+        <!-- ===== AdSense: 상세보기 ===== -->
+        <div class="ad-slot ad-detail" data-ad="detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 푸터 ===== -->
+  <footer class="site-footer">
+    <div class="container">
+      <!-- ===== AdSense: 푸터 ===== -->
+      <div class="ad-slot ad-footer" data-ad="footer"></div>
+      <p class="footer-text">© 2026 AIGallery — Powered by Supabase</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+  <script src="gallery.js"></script>
+</body>
+</html>

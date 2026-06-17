@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIGallery — 유저 프로필</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===== 헤더 ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="gallery.html" class="logo"><span class="logo-mark">✦</span> AI<span class="logo-accent">Gallery</span></a>
+      <nav class="main-nav">
+        <a href="gallery.html" data-nav>갤러리</a>
+        <a href="upload.html" data-nav>업로드</a>
+        <a href="profile.html" data-nav>내 프로필</a>
+      </nav>
+      <div class="header-actions">
+        <div id="navGuest" class="auth-guest" hidden>
+          <a href="index.html" class="btn btn-primary">로그인</a>
+        </div>
+        <div id="navUser" class="auth-user" hidden>
+          <span class="user-chip" id="navUserName"></span>
+          <button class="btn btn-ghost" id="logoutBtn">로그아웃</button>
+        </div>
+      </div>
+    </div>
+    <div class="container"><div class="ad-slot ad-header" data-ad="header"></div></div>
+  </header>
+
+  <main class="container">
+    <p class="status-msg" id="pvStatus" hidden>불러오는 중...</p>
+
+    <section class="profile-head" id="pvHead" hidden>
+      <div class="profile-avatar">👤</div>
+      <div>
+        <h1 class="profile-name"><span class="level-badge" id="pvLevelBadge">Beginner</span> <span id="pvName">사용자</span></h1>
+        <p class="profile-meta">업로드 <strong id="pvUploads">0</strong>개 · <span class="count-link" id="pvFollowersBtn">팔로워 <strong id="pvFollowers">0</strong></span> · <span class="count-link" id="pvFollowingBtn">팔로잉 <strong id="pvFollowing">0</strong></span></p>
+        <p class="profile-meta">총 <strong id="pvScore">0</strong>점</p>
+      </div>
+      <button class="btn btn-primary follow-btn" id="profileFollowBtn" hidden>+ 팔로우</button>
+    </section>
+
+    <h2 class="section-title" id="pvGalleryTitle" hidden>업로드한 이미지</h2>
+    <section class="gallery" id="pvGrid"></section>
+    <div class="empty-msg" id="pvEmpty" hidden>
+      <p class="empty-title">아직 업로드한 사진이 없어요</p>
+    </div>
+  </main>
+
+  <!-- ===== 상세 모달 ===== -->
+  <div class="modal-overlay" id="detailModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" data-close-modal aria-label="닫기">&times;</button>
+      <div class="modal-img-wrap"><img id="modalImg" src="" alt="" /></div>
+      <div class="modal-info">
+        <span class="modal-category" id="modalCategory"></span>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <p class="modal-artist" id="modalArtist"></p>
+        <button class="btn btn-ghost btn-sm follow-btn" id="followBtn" hidden>+ 팔로우</button>
+        <p class="modal-desc" id="modalDesc"></p>
+        <p class="modal-ai">🤖 사용 AI: <span id="modalAi"></span></p>
+        <p class="modal-date" id="modalDate"></p>
+        <div class="modal-stats">
+          <button class="like-btn" id="likeBtn" data-liked="0"><span id="likeIcon">🤍</span> <span id="likeCount">0</span></button>
+          <span class="stat-item">👁 <span id="viewCount">0</span></span>
+          <span class="stat-item">⬇ <span id="downloadCount">0</span></span>
+        </div>
+        <button class="btn btn-primary modal-download" id="downloadBtn">⬇ 이미지 다운로드</button>
+        <button class="report-link" id="reportBtn" hidden>🚩 신고하기</button>
+        <div class="ad-slot ad-detail" data-ad="detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="ad-slot ad-footer" data-ad="footer"></div>
+      <p class="footer-text">© 2026 AIGallery — Powered by Supabase</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+  <script src="profile_view.js"></script>
+</body>
+</html>
