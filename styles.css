@@ -551,6 +551,18 @@ input:focus, select:focus, textarea:focus {
 /* ===== 푸터 ===== */
 .site-footer { background: var(--white); border-top: 1px solid var(--border); padding: 28px 0 22px; text-align: center; margin-top: 40px; }
 .footer-text { color: var(--text-soft); font-size: 0.9rem; }
+.footer-text a { color: var(--blue); text-decoration: none; }
+.footer-text a:hover { text-decoration: underline; }
+
+/* 문서 페이지 (개인정보처리방침 등) */
+.doc-page { padding-bottom: 50px; }
+.doc-page p { color: var(--text); line-height: 1.75; margin: 10px 0; }
+.doc-h2 { font-size: 1.15rem; font-weight: 700; color: #1e1e2e; margin: 28px 0 8px; }
+.doc-list { margin: 8px 0 8px 18px; color: var(--text); line-height: 1.8; }
+.doc-list li { margin: 4px 0; }
+.doc-page a { color: var(--blue); }
+.doc-back { margin-top: 32px; }
+.doc-back a { font-weight: 600; text-decoration: none; }
 
 /* ===== 반응형 ===== */
 @media (max-width: 900px) {
